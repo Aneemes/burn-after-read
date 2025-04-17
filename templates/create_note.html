@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Create Note - Burn After Read{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h2 class="card-title">Create a Self-Destructing Note</h2>
+    
+    {% if note_link %}
+    <div class="info-message">
+        <p>✅ Your note has been created! Share this link with the recipient:</p>
+        <div class="note-link">
+            <span id="note-url">{{ note_link }}</span>
+            <button onclick="copyToClipboard()" class="btn btn-secondary copy-btn">Copy</button>
+        </div>
+        <p class="note-warning">⚠️ The note will be destroyed after the first viewing.</p>
+    </div>
+    {% else %}
+    <form method="post">
+        <div class="form-group">
+            <label for="content">Note Content</label>
+            <textarea name="content" id="content" required></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password Protection (optional)</label>
+            <input type="password" name="password" id="password" placeholder="Leave empty for no password">
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn">Create Note</button>
+        </div>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyToClipboard() {
+    const noteUrl = document.getElementById('note-url');
+    const range = document.createRange();
+    range.selectNode(noteUrl);
+    window.getSelection().removeAllRanges();
+    window.getSelection().addRange(range);
+    document.execCommand('copy');
+    window.getSelection().removeAllRanges();
+    
+    const copyBtn = document.querySelector('.copy-btn');
+    copyBtn.textContent = 'Copied!';
+    setTimeout(() => {
+        copyBtn.textContent = 'Copy';
+    }, 2000);
+}
+</script>
+{% endblock %}
